@@ -1,36 +1,12 @@
 #![feature(lazy_cell, ptr_sub_ptr)]
 use std::cmp::Ordering;
 
-use engage::gamedata::*;
+use engage::gamedata::JobData;
 
 use unity::prelude::*;
 
-#[unity::class("App", "JobData")]
-pub struct JobData2 {
-    pub parent: StructBaseFields, //0x0, //0x0
-    pub jid: &'static Il2CppString, //0x10
-    pub name: &'static Il2CppString, //0x18
-    pub aid: &'static Il2CppString, //0x20
-    pub help: &'static Il2CppString, //0x28
-    pub unit_icon_id_m : Option<&'static Il2CppString>, //0x30
-    pub unit_icon_id_f : Option<&'static Il2CppString>, //0x38
-    pub unit_icon_weapon_id: &'static Il2CppString, //0x40
-    pub rank: i32,  //0x48
-    __ : i32,   ///0x4c
-    pub style_name: &'static Il2CppString, //0x50
-    pub move_type: i32, //0x58
-    pub step_frame: i32, //0x5C
-    pub max_level: u8, //0x60
-    pub internal_level: i8, //0x61
-    pub sort: u16, //0x62
-    junk: [u8; 0x90], //0x64
-    pub skills: Option<&'static mut Il2CppArray<&'static mut Il2CppString>>, //0xf8
-    pub learn_skill: Option<&'static Il2CppString>, // 0x100
-    pub lunatic_skill: Option<&'static Il2CppString>, //0x108
-}
-
 #[unity::hook("App", "JobData", "IsGunner")]
-pub fn jobData_IsGunner_hook(this: &mut JobData2, _method_info: OptionalMethod) -> bool {
+pub fn jobData_IsGunner_hook(this: &mut JobData, _method_info: OptionalMethod) -> bool {
     if let Some(skills) = this.skills.as_ref(){
         return this.skills.as_ref().unwrap().iter().find(|skill| skill.contains("SID_弾丸装備")).is_some();
     }
